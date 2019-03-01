@@ -59,6 +59,22 @@
 
 <script>
 
+  document.addEventListener('keydown', (e) => {
+    let audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    let button = document.querySelector(`div[data-key="${e.keyCode}"]`);
+    if (button) {
+      button.classList.add("playing");
+      audio.play();
+    }    
+  })
+
+  document.addEventListener('keyup', (e) => {
+    let button = document.querySelector(`div[data-key="${e.keyCode}"]`);
+    if (button) {
+      button.classList.remove("playing");
+    }
+  })
+
 </script>
 
 
