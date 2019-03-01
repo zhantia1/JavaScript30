@@ -7,8 +7,49 @@
 <body>
 <canvas id="draw" width="800" height="800"></canvas>
 <script>
-</script>
+  const canvas = document.getElementById('draw');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerWidth;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = '#BADA55'
 
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;  
+  let hue = 0;
+
+  function draw(e) {
+    if (!isDrawing) { return; }
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+    ctx.beginPath();
+    // start from
+    ctx.moveTo(lastX, lastY);
+    // go to
+    ctx.lineTo(e.offsetX, e.offsetY);
+    // draw it
+    ctx.stroke();
+    // after drawing one line we should update where to start drawing the new line
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+
+    // changing hue
+    hue = (hue >= 360) ? 0 : hue + 1;
+    // changing line width (start width at 30 and scale it up to a max of 60)
+    ctx.lineWidth = (ctx.lineWidth >= 60) ? 60 : ctx.lineWidth + 1;
+  }
+
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+    // start width at 30 and scale it up to a max of 60
+    ctx.lineWidth = 30;
+  });
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mouseleave', () => isDrawing = false);
+
+</script>
 <style>
   html, body {
     margin: 0;
